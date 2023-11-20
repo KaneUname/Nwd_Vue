@@ -4,34 +4,36 @@ import { ElMessage } from 'element-plus'
 // 使用create创建axios实例
 let loadingObj = null
 let accessToken =localStorage.getItem("accessToken")
-
-setTimeout(" ", 500 )
 console.log("获取token:"+localStorage.getItem("accessToken"))
 const Service = axios.create({
     timeout:8000,
     baseURL:"http://127.0.0.1:8881/api",
     headers:{
-        "Content-type":"application/json;charset=utf-8 ",
-        "authorization": accessToken
+        "Content-type":"application/json;charset=utf-8 "
     }
 })
 
 //请求拦截-增加loading,对请求做统一处理
 Service.interceptors.request.use(config=>{
+    console.log("发送请求token::"+localStorage.getItem("accessToken"))
     loadingObj = ElLoading.service({
             lock: true,
             text: 'Loading',
             background: 'rgba(0, 0, 0, 0.7)',
         })
-        return config
+    if(localStorage.getItem("accessToken")!=null){
+        config.headers.authorization = localStorage.getItem("accessToken");
+    }
+    console.log(config.headers.authorization)
+    return config
     
 })
 //响应拦截-对返回值做统一处理
 Service.interceptors.response.use(response=>{
-    //3秒后关闭loading
+    //0.1毫秒后关闭loading
     setTimeout(()=>{
         loadingObj.close()
-    },500)
+    },100)
     const data = response.data
     if(data.status!="200"){
         ElMessage.error( data.message || "Server error")

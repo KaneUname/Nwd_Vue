@@ -32,7 +32,7 @@
                 <el-table-column prop="memorySize" label="存储空间（G）"  />
                 <el-table-column label="状态"   >
                     <template #default="scope">
-                        <el-switch v-model="scope.row.mg_state " 
+                        <el-switch v-model="scope.row.mgstate " 
                         class="switch-color"
                         @click="editType(scope.row)"
                         />
@@ -148,7 +148,7 @@ export default {
                 if(res.status=="200"){
                     console.log(res.data);
                     for(var ms in res.data){
-                        res.data[ms].mg_state=res.data[ms].mg_state === 0 ? true:false
+                        res.data[ms].mgstate=res.data[ms].mgstate === 0 ? true:false
                     }
                     data.userListdata = res.data
                 }
